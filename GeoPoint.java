@@ -1,3 +1,7 @@
+/**
+ * NOW
+ */
+
 package homework1;
 
 /**
@@ -54,6 +58,12 @@ public class GeoPoint {
      */
   	public static final double KM_PER_DEGREE_LONGITUDE = 93.681;
   	
+  	/** a value for division. **/
+  	public static final int MILLION = 1000000;
+  	
+  	private int latitude;
+    private int longitude;
+    
 	// Implementation hint:
 	// Doubles and floating point math can cause some problems. The exact
 	// value of a double can not be guaranteed except within some epsilon.
@@ -64,9 +74,13 @@ public class GeoPoint {
 	// and distance computations). Because of this, you should consider 
 	// using ints for your internal representation of GeoPoint. 
 
-  	
-  	// TODO Write abstraction function and representation invariant
-  	
+	// Abstraction Function:
+	// Represent a GeoPoint gp with gp.latitude = latitude and gp.longitude = longitude.
+
+	// Representation invariant for every GeoPoint gp:
+    // (gp.longitude <= MAX_LONGITUDE) && (gp.longitude >= MIN_LONGITUDE) and
+    // (gp.latitude <= MAX__LATITUDE) && (gp.latitude >= MIN_LATITUDE)
+
   	
   	/**
   	 * Constructs GeoPoint from a latitude and longitude.
@@ -78,7 +92,9 @@ public class GeoPoint {
      *          given in millionths of degrees.
    	 **/
   	public GeoPoint(int latitude, int longitude) {
-  		// TODO Implement this constructor
+		this.latitude=latitude;
+		this.longitude=longitude;
+		checkRep();
   	}
 
   	 
@@ -87,7 +103,7 @@ public class GeoPoint {
      * @return the latitude of this in millionths of degrees.
      */
   	public int getLatitude() {
-  		// TODO Implement this method
+  		return latitude;
   	}
 
 
@@ -96,7 +112,7 @@ public class GeoPoint {
      * @return the latitude of this in millionths of degrees.
      */
   	public int getLongitude() {
-  		// TODO Implement this method
+  		return longitude;
   	}
 
 
@@ -107,7 +123,20 @@ public class GeoPoint {
      *         the Technion approximation.
      **/
   	public double distanceTo(GeoPoint gp) {
-  		// TODO Implement this method
+        //longitude and Latitude
+        int fistLongitude = longitude;
+        int firstLatitude = latitude;
+        int secondLongitude = gp.getLongitude();
+        int secondLatitude = gp.getLatitude();
+
+        //differences
+		double y = Math.abs(firstLatitude - secondLatitude)*KM_PER_DEGREE_LATITUDE;
+        double x = Math.abs(fistLongitude - secondLongitude)*KM_PER_DEGREE_LONGITUDE;
+
+        //Final distance calculation (divided by million).
+        double Distance =Math.sqrt(Math.pow(x,2)+Math.pow(y,2))/MILLION;
+
+        return Distance;
   	}
 
 
