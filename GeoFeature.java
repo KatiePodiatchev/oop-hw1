@@ -45,8 +45,15 @@ public class GeoFeature {
 	// info can be found at:
 	//   http://docs.oracle.com/javase/8/docs/api/java/util/List.html
 	
+	 private final ArrayList<GeoSegment> geoSegmentList; 
+
 	
   	// TODO Write abstraction function and representation invariant
+	// Abstraction function: geoSegmentList is a list of GeoSegments 
+	// 
+	// Representation invariant: GeoSegments is a non empty list of GeoSegments. If gs2 comes right after gs1 in geoSegmentList,
+	// then the first endpoint of gs2 is equal to the second endpoint of gs1. 
+	// All GeoSegments in the list must have equal names.
 
 	
 	/**
@@ -61,6 +68,9 @@ public class GeoFeature {
      **/
   	public GeoFeature(GeoSegment gs) {
   		// TODO Implement this constructor
+  		geoSegmentList = new ArrayList<GeoSegment>();
+  		geoSegmentList.add(gs);
+  		assert(this.checkRep());
   	}
   
 
@@ -69,7 +79,10 @@ public class GeoFeature {
       * @return name of geographic feature
       */
   	public String getName() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		String name = geoSegmentList.get(0).getName();
+  		assert(this.checkRep());
+  		return name;
   	}
 
 
@@ -78,7 +91,10 @@ public class GeoFeature {
      * @return location of the start of the geographic feature.
      */
   	public GeoPoint getStart() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		start = geoSegmentList.get(0);
+  		assert(this.checkRep());
+  		return start;
   	}
 
 
@@ -87,7 +103,10 @@ public class GeoFeature {
      * @return location of the end of the geographic feature.
      */
   	public GeoPoint getEnd() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		GeoPoint end = geoSegmentList.get(geoSegmentList.size() - 1);
+  		assert(this.checkRep());
+  		return end;
   	}
 
 
@@ -97,7 +116,10 @@ public class GeoFeature {
      *         geographic feature, in degrees.
      */
   	public double getStartHeading() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		double startHeading = geoSegmentList.get(0).getHeading();
+  		assert(this.checkRep());
+  		return startHeading;
   	}
 
 
@@ -107,7 +129,10 @@ public class GeoFeature {
      *         geographic feature, in degrees.
      */
   	public double getEndHeading() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		double endHeading = geoSegmentList.get(geoSegmentList.size() - 1).getHeading();
+  		assert(this.checkRep());
+  		return endHeading;
   	}
 
 
@@ -119,7 +144,15 @@ public class GeoFeature {
      *         values are not necessarily equal.
      */
   	public double getLength() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		
+  		double length = 0;
+  		for (segment Geosegment: geoSegmentList) {
+  			length += segment.getLength();
+  		}
+  		
+  		assert(this.checkRep());
+  		return length;
   	}
 
 
@@ -133,7 +166,9 @@ public class GeoFeature {
      *    	   r.length = this.length + gs.length
      **/
   	public GeoFeature addSegment(GeoSegment gs) {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		geoSegmentList.add(gs);
+  		assert(this.checkRep());
   	}
 
 
@@ -150,13 +185,16 @@ public class GeoFeature {
      *      this.length       = sum(0 <= i < a.length) . a[i].length &&
      *      for all integers i
      *          (0 <= i < a.length-1 => (a[i].name == a[i+1].name &&
-     *                                   a[i].p2d  == a[i+1].p1))
+     *                                   a[i].p2   == a[i+1].p1))
      * </pre>
      * where <code>a[n]</code> denotes the nth element of the Iterator.
      * @see homework1.GeoSegment
      */
   	public Iterator<GeoSegment> getGeoSegments() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		Iterator<GeoSegment> geoSegments = geoSegmentList.iterator();
+  		assert(this.checkRep());
+  		return geoSegments;
   	}
 
 
@@ -167,7 +205,14 @@ public class GeoFeature {
      *          the same elements in the same order).
      **/
   	public boolean equals(Object o) {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+		if (!(obj instanceof GeoFeature))
+			return false;
+		GeoFeature otherGeoFeature = (GeoFeature)o;
+		boolean isEqual = otherGeoFeature.getName().equals(this.getName()) && 
+				otherGeoFeature.geoSegmentList.equals(this.geoSegmentList);
+		assert(this.checkRep());
+		return isEqual;
   	}
 
 
@@ -175,11 +220,8 @@ public class GeoFeature {
      * Returns a hash code for this.
      * @return a hash code for this.
      **/
-  	public int hashCode() {
-    	// This implementation will work, but you may want to modify it
-    	// improved performance.
-    	
-    	return 1;
+  	public int hashCode() {	
+    	return this.getName().hashCode();
   	}
 
 
@@ -188,6 +230,31 @@ public class GeoFeature {
    	 * @return a string representation of this.
      **/
   	public String toString() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		String representationString = this.getName() + ": " + this.getStart().getP1().toString() + " ";
+  		for (segment Geosegment: geoSegmentList) {
+  			representationString += String.format("==> %s", segment.getP2().toString());
+  		}
+  		assert(this.checkRep());
+  		return representationString;
+  	}
+  
+  
+  	private boolean checkRep() {
+  		if (geoSegmentList == null || geoSegmentList.size() < 1 || geoSegmentList.contains(null)) {
+  			return false;
+  		}
+  		GeoSegment previousSegment = null;
+  		for (currentSegment Geosegment: geoSegmentList) {
+  			if (lastSegment != null) {
+  				boolean isTheSameString = previousSegment.getName().equals(currentSegment.getName());
+  				boolean isTheSamePoint = previousSegment.getP2().equals(lastSegment.getP1());
+  	  			if (!isTheSameString && !isTheSamePoint) {
+  	  				return false;
+  	  			}
+  			}
+  			lastElement = currentElement;
+  		}
+  		return true;
   	}
 }
