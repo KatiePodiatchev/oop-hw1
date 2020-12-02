@@ -40,9 +40,16 @@ package homework1;
  * </pre>
  **/
 public class GeoSegment  {
+	
+	private final GeoPoint p1;
+	private final GeoPoint p2;
+	private final String name;
 
 	
   	// TODO Write abstraction function and representation invariant
+	// Abstraction function: p1 represents the first endpoint of the segment, p2 represents the second endpoint of the segment. 
+	// name represents the name of the segment. If p1 == p2 the length of the segment is 0 and the heading is 0.
+	// Representation invariant: name != null && p1 != null && p2 != null.
 	
 	
   	/**
@@ -52,6 +59,10 @@ public class GeoSegment  {
      **/
   	public GeoSegment(String name, GeoPoint p1, GeoPoint p2) {
   		// TODO Implement this method
+  		this.name = name;
+  		this.p1 = p1;
+  		this.p2 = p2;
+  		assert(this.checkRep());
   	}
 
 
@@ -62,6 +73,10 @@ public class GeoSegment  {
      **/
   	public GeoSegment reverse() {
   		// TODO Implement this method
+  		assert(this.checkRep());
+  		GeoSegment reversed = new GeoSegment(this.name, this.p2, this.p1);
+  		assert(this.checkRep());
+  		return reversed;
   	}
 
 
@@ -70,7 +85,10 @@ public class GeoSegment  {
      * @return the name of this GeoSegment.
      */
   	public String getName() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		String name = this.name;
+  		assert(this.checkRep());
+  		return name;
   	}
 
 
@@ -79,7 +97,8 @@ public class GeoSegment  {
      * @return first endpoint of the segment.
      */
   	public GeoPoint getP1() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		return p1;
   	}
 
 
@@ -88,7 +107,8 @@ public class GeoSegment  {
      * @return second endpoint of the segment.
      */
   	public GeoPoint getP2() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		return p2;
   	}
 
 
@@ -98,7 +118,10 @@ public class GeoSegment  {
      *         Technion approximation.
      */
   	public double getLength() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		double length = p1.equals(p2) ? 0 : p1.distanceTo(p2);
+  		assert(this.checkRep());
+  		return length;
   	}
 
 
@@ -109,7 +132,10 @@ public class GeoSegment  {
      *         flat-surface, near the Technion approximation.
      **/
   	public double getHeading() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		double heading = p1.equals(p2) ? 0 : p1.headingTo(p2);
+  		assert(this.checkRep());
+  		return heading;
   	}
 
 
@@ -118,8 +144,15 @@ public class GeoSegment  {
      * @return gs != null && (gs instanceof GeoSegment)
      *         && gs.name = this.name && gs.p1 = this.p1 && gs.p2 = this.p2
    	 **/
-  	public boolean equals(Object gs) {
-  		// TODO Implement this method
+  	public boolean equals(Object o) {
+  		assert(this.checkRep());
+		if (!(obj instanceof GeoSegment))
+			return false;
+		GeoSegment otherGeoSegment = (GeoSegment)o;
+		boolean isEqual = otherGeoSegment.name.equals(this.name) && 
+				otherGeoFeature.p1.equals(this.p1) && otherGeoFeature.p2.equals(this.p2);
+		assert(this.checkRep());
+		return isEqual;
   	}
 
 
@@ -128,10 +161,10 @@ public class GeoSegment  {
      * @return a hash code value for this.
      **/
   	public int hashCode() {
-    	// This implementation will work, but you may want to modify it 
-    	// for improved performance. 
-
-    	return 1;
+  		assert(this.checkRep());
+    	int hashCode = p1.hashCode ^ p2.hashCode();
+    	assert(this.checkRep());
+    	return hasgCode;
   	}
 
 
@@ -141,6 +174,13 @@ public class GeoSegment  {
      **/
   	public String toString() {
   		// TODO Implement this method
+  		assert(this.checkRep());
+  		return String.format("%s: %s --> %s", name, p1.toString(), p2.toString());
+  	}
+  	
+
+  	private boolean checkRep() {
+  		return name != null && p1 != null && p2 != null;
   	}
 
 }
