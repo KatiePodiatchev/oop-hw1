@@ -248,12 +248,12 @@ public class GeoFeature {
   		for (currentSegment Geosegment: geoSegmentList) {
   			if (lastSegment != null) {
   				boolean isTheSameString = previousSegment.getName().equals(currentSegment.getName());
-  				boolean isTheSamePoint = previousSegment.getP2().equals(lastSegment.getP1());
+  				boolean isTheSamePoint = previousSegment.getP2().equals(currentSegment.getP1());
   	  			if (!isTheSameString && !isTheSamePoint) {
   	  				return false;
   	  			}
   			}
-  			lastElement = currentElement;
+  			previousSegment = currentSegment;
   		}
   		return true;
   	}

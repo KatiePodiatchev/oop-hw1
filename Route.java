@@ -33,9 +33,18 @@ import java.util.Iterator;
  **/
 public class Route {
 
+	private final ArrayList<GeoFeature> geoFeatureList;
+	private final ArrayList<GeoSegment> geoSegmentList;
 	
- 	// TODO Write abstraction function and representation invariant
+	// Abstraction Function:
+	// The sequence of geographic features that make up this Route are represented by the 
+	// geoFeatureList. The sequence of segments that make up this Route are represented by 
+	// geoSegmentList.
 
+	// Representation invariant: for every two consecutive GeoFeatures gf_1 and gf_2
+	// in geoFeatureList. gf_1 != gf_2 != nil. 
+	// geoFeatureList is a concatination of all the GeoFeatures in geoFeatureList. 
+	
 
   	/**
   	 * Constructs a new Route.
@@ -184,6 +193,26 @@ public class Route {
      * @return a string representation of this.
      **/
   	public String toString() {
+  	}
+
+ 
+  	private boolean checkRep() {
+  		if (geoSegmentList == null || geoSegmentList.size() < 1 || geoSegmentList.contains(null) ||
+  			geoFeatureList == null || geoFeatureList.size() < 1 || geoFeatureList.contains(null)) {
+  			return false;
+  		}
+  		GeoSegment previousSegment = null;
+  		for (currentSegment Geosegment: geoSegmentList) {
+  			if (lastSegment != null) {
+  				boolean isTheSameString = previousSegment.getName().equals(currentSegment.getName());
+  				boolean isTheSamePoint = previousSegment.getP2().equals(lastSegment.getP1());
+  	  			if (!isTheSameString && !isTheSamePoint) {
+  	  				return false;
+  	  			}
+  			}
+  			lastElement = currentElement;
+  		}
+  		return true;
   	}
 
 }
