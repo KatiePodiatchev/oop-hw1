@@ -1,5 +1,6 @@
 package homework1;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -171,8 +172,14 @@ public class Route {
      *         (o.geoFeatures and this.geoFeatures contain
      *          the same elements in the same order).
      **/
-  	public boolean equals(Object o) {
-  		// TODO Implement this method
+  	public boolean equals(Object obj) {
+  		assert(this.checkRep());
+		if (!(obj instanceof Route))
+			return false;
+		Route otherRoute = (Route)obj;
+		boolean isEqual = otherRoute.geoFeatureList.equals(this.geoFeatureList);
+		assert(this.checkRep());
+		return isEqual;
   	}
 
 
@@ -181,9 +188,7 @@ public class Route {
      * @return a hash code for this.
      **/
   	public int hashCode() {
-    	// This implementation will work, but you may want to modify it
-    	// for improved performance.
-
+  		assert(this.checkRep());
     	return 1;
   	}
 
@@ -193,26 +198,67 @@ public class Route {
      * @return a string representation of this.
      **/
   	public String toString() {
+  		assert(this.checkRep());
+  		String representationString = "";
+  		for (GeoSegment feature: geoFeatureList) {
+  			representationString += feature.toString();
+  			representationString += "\n";
+  		}
+  		assert(this.checkRep());
+  		return representationString;
   	}
 
  
   	private boolean checkRep() {
   		if (geoSegmentList == null || geoSegmentList.size() < 1 || geoSegmentList.contains(null) ||
-  			geoFeatureList == null || geoFeatureList.size() < 1 || geoFeatureList.contains(null)) {
+  			geoFeatureList == null || geoFeatureList.size() < 1 || geoSegmentList.contains(null)) {
   			return false;
   		}
-  		GeoSegment previousSegment = null;
-  		for (currentSegment Geosegment: geoSegmentList) {
-  			if (lastSegment != null) {
-  				boolean isTheSameString = previousSegment.getName().equals(currentSegment.getName());
-  				boolean isTheSamePoint = previousSegment.getP2().equals(lastSegment.getP1());
-  	  			if (!isTheSameString && !isTheSamePoint) {
-  	  				return false;
-  	  			}
+  		return this.checkSegmentListIsConcatinationOfFeatureList() && 
+  			   this.checkNoConsecutiveFeaturesWithSameName() &&
+  			   this.checkNewFeatureBeginsWithEndOfOld();
+  	}
+  	
+  	private boolean checkSegmentListIsConcatinationOfFeatureList() {
+  		Iterator segmentIterator = geoSegmentList.iterator();
+  		for (feature GeoFeature: geoFeatureList) {
+  			Iterator featureIterator = feature.getGeoSegments();
+  			while(featureIterator.hasNext()) {
+  				if (!segmentIterator.hasNext() || 
+  					!featureIterator.next().equals(segmentIterator.next())) {
+  					return false;
+  				}
   			}
-  			lastElement = currentElement;
+  		}
+  		return segmentIterator.hasNext() ? false : true;
+  	}
+  	
+  	private boolean checkNoConsecutiveFeaturesWithSameName() {
+  		GeoSegment previousFeature = null;
+  		for (currentFeature GeoFeature: geoFeatureList) {
+  			if (previousFeature != null) {
+  				if (currentFeature.getName().equals(previousFeature.getName())) {
+  					return false;
+  				}
+  			}
+  			previousFeature = currentFeature;
   		}
   		return true;
   	}
-
+  	
+  	private boolean checkNewFeatureBeginsWithEndOfOld() {
+  		GeoSegment previousFeature = null;
+  		for (currentFeature GeoFeature: geoFeatureList) {
+  			if (previousFeature != null) {
+  				GeoPoint lastPointAtPrevious = previousFeature.getEnd().getP2();
+  				GeoPoint firstPointAtCurrent = currentFeature.getEnd().getP1()
+  				if (!lastPointAtPrevious.equals(firstPointAtCurrent)) {
+  					return false;
+  				}
+  			}
+  			previousFeature = currentFeature;
+  		}
+  		return true;
+  	}
+ 
 }
