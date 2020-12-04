@@ -82,11 +82,11 @@ public class GeoFeature {
      *          r.startHeading = gsLis[0].heading &&
      *          r.endHeading = gsList[gsList.size - 1].heading &&
      *          r.start = gsList[0].p1 &&
-     *          r.end = gsList[gsList.size - 1].p2
+     *          r.end = gsList[gsList.size - 1].p2 &&
+     *          r.length = the sum of lengths of the segments in gsList 
      **/
   	public GeoFeature(ArrayList<GeoSegment> gsList) {
-  		// TODO Implement this constructor
-  		geoSegmentList = gsList.clone();
+  		geoSegmentList = (ArrayList<GeoSegment>)gsList.clone();
   		assert(this.checkRep());
   	}
   	
@@ -183,11 +183,11 @@ public class GeoFeature {
      **/
   	public GeoFeature addSegment(GeoSegment gs) {
   		assert(this.checkRep());
-  		
-  		geoSegmentList.add(gs);
-
+  		ArrayList<GeoSegment> newGeoSegmentList = (ArrayList<GeoSegment>)this.geoSegmentList.clone()
+  	    newGeoSegmentList.add(gs);
+  		GeoFeature newGeoFeature = new GeoFeature(newGeoSegmentList);
   		assert(this.checkRep());
-  		return this;
+  		return newGeoFeature;
   	}
 
 

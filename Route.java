@@ -43,7 +43,7 @@ public class Route {
 	// geoSegmentList.
 
 	// Representation invariant: for every two consecutive GeoFeatures gf_1 and gf_2
-	// in geoFeatureList. gf_1 != gf_2 != nil. 
+	// in geoFeatureList gf_1 != null && gf_2 != null && gf_1.name != gf_2.name. 
 	// geoFeatureList is a concatination of all the GeoFeatures in geoFeatureList. 
 	
 
@@ -64,6 +64,25 @@ public class Route {
   		this.geoFeatureList = new ArrayList<>();
   		this.geoFeatureList.add(feature);
 
+  		assert(this.checkRep());
+  	}
+  	
+  	
+  	/**
+  	 * Constructs a new Route.
+     * @requires featureList != null && for every two consecutive GeoFeatures gf_1 and gf_2
+				 in geoFeatureList gf_1 != null && gf_2 != null && gf_1.name != gf_2.name && 
+				 gf_1.end == gf_2.start. 
+     * @effects Constructs a new Route, r, such that
+     *	        r.startHeading = featureList.end.heading &&
+     *          r.endHeading = featureList.start.heading &&
+     *          r.start = featureList.start &&
+     *          r.end = featureList.end &&
+     *          r.length = sum of lengths of features in featureList; 
+     **/
+  	public Route(ArrayList<GeoFeature> featureList) {
+  		this.geoFeatureList = (ArrayList<GeoFeature>)featureList.clone();
+  		this.geoSegmentList = this.flattenFeatureList(featureList);
   		assert(this.checkRep());
   	}
 
@@ -146,6 +165,23 @@ public class Route {
      **/
   	public Route addSegment(GeoSegment gs) {
   		assert(this.checkRep());
+  		this.geoSegmentList.add(gs);
+  		ArrayList<GeoFeature> newFeatureList = (ArrayList<GeoFeature>)this.geoFeatureList.clone();
+  		
+  		GeoFeature newFeature;
+  		GeoFeature lastFeature = newFeatureList.get(newFeatureList.size()-1);
+  		String lastFeatureName = lastFeature.getName();
+  		if (gs.getName().equals(lastFeatureName)) {
+  			newFeatureList.remove(lastFeature);
+  			newFeature = lastFeature.addSegment(gs);
+  		} else {
+  			newFeature = lastFeature;
+  		}
+  		newFeatureList.add(newFeature);
+  		
+		Route newRoute = new Route(newFeatureList);
+		assert(this.checkRep());
+		return newRoute;
   		
   	}
 
@@ -191,24 +227,10 @@ public class Route {
      * @see homework1.GeoSegment
      **/
   	public Iterator<GeoSegment> getGeoSegments() {
-  		ArrayList<GeoSegment> segments = new ArrayList<>;
-  		geoFeatureList.forEach(segments.addAll(feature.ge))); 
-//  		Iterator<GeoSegment> segmentIterator = geoSegmentList.iterator();
-//  		for (GeoFeature feature:this.geoFeatureList) {
-//  			Iterator<GeoSegment> featureIterator = feature.getGeoSegments();
-//  			while(featureIterator.hasNext()) {
-//  				if (!segmentIterator.hasNext() || 
-//  					!featureIterator.next().equals(segmentIterator.next())) {
-//  					return false;
-//  				}
-//  			}
-//  		}
-//  		return segmentIterator.hasNext() ? false : true;
-  		
-//  		assert(this.checkRep());
-//  		Iterator<GeoSegment> iterator = this.geoSegmentList.iterator();
-//  		assert(this.checkRep());
-//  		return iterator;
+  		assert(this.checkRep());
+  		ArrayList<GeoSegment> segments = this.flattenFeatureList(this.geoFeatureList);
+  		assert(this.checkRep());
+  		return segments.iterator();
   	}
 
 
@@ -254,7 +276,19 @@ public class Route {
   		return representationString;
   	}
 
+  	
+  	private ArrayList<GeoSegment> flattenFeatureList(ArrayList<GeoFeature> featureList) {
+  		ArrayList<GeoSegment> segmentList = new ArrayList<>;
+  		for (GeoFeature feature:this.geoFeatureList) {
+  			Iterator<GeoSegment> featureIterator = feature.getGeoSegments();
+  			while(featureIterator.hasNext()) {
+  				segmentList.add(featureIterator.next());
+  			}
+  		}
+  		return segmentList;
+  	}
  
+  	
   	private boolean checkRep() {
   		if (geoSegmentList == null || geoSegmentList.size() < 1 || geoSegmentList.contains(null) ||
   			geoFeatureList == null || geoFeatureList.size() < 1 || geoSegmentList.contains(null)) {
@@ -282,7 +316,7 @@ public class Route {
   	
   	
   	private boolean checkNoConsecutiveFeaturesWithSameName() {
-  		GeoSegment previousFeature = null;
+  		GeoFeature previousFeature = null;
   		for (GeoFeature currentFeature:geoFeatureList) {
   			if (previousFeature != null) {
   				if (currentFeature.getName().equals(previousFeature.getName())) {
@@ -296,7 +330,7 @@ public class Route {
   	
   	
   	private boolean checkNewFeatureBeginsWithEndOfOld() {
-  		GeoSegment previousFeature = null;
+  		GeoFeature previousFeature = null;
   		for (GeoFeature currentFeature:geoFeatureList) {
   			if (previousFeature != null) {
   				GeoPoint lastPointAtPrevious = previousFeature.getEnd().getP2();
