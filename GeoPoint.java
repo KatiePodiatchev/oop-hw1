@@ -134,9 +134,9 @@ public class GeoPoint {
         double x = Math.abs(fistLongitude - secondLongitude)*KM_PER_DEGREE_LONGITUDE;
 
         //Final distance calculation (divided by million).
-        double Distance =Math.sqrt(Math.pow(x,2)+Math.pow(y,2))/MILLION;
+        double DistanceToPoint =Math.sqrt(Math.pow(x,2)+Math.pow(y,2))/MILLION;
 
-        return Distance;
+        return DistanceToPoint;
   	}
 
 
@@ -158,8 +158,19 @@ public class GeoPoint {
 		 // degrees and degrees increase in the clockwise direction. By
 		 // mathematical convention, "east" is 0 degrees, and degrees
 		 // increase in the counterclockwise direction. 
-		 
-  		// TODO Implement this method
+		
+        int firstLatitude = latitude;
+        int fistLongitude = longitude;
+
+        int secondLongitude = gp.getLongitude();
+        int secondLatitude = gp.getLatitude();
+
+        int LongitudeDiff = fistLongitude - secondLongitude;
+		int LatitudeDiff = firstLatitude - secondLatitude;
+
+        double direction = Math.abs((-Math.toDegrees(Math.atan2(LatitudeDiff,LongitudeDiff)) + 270) % 360);
+
+        return direction;
   	}
 
 
@@ -169,7 +180,13 @@ public class GeoPoint {
      * 		   gp.latitude = this.latitude && gp.longitude = this.longitude
      **/
   	public boolean equals(Object gp) {
-  		// TODO Implement this method
+		if(gp !=null && gp instanceof GeoPoint) {
+			GeoPoint recievedGP = (GeoPoint) gp;
+			if (recievedGP.getLatitude() == this.latitude &&
+					recievedGP.getLongitude() == this.longitude)
+				return true;
+		}
+		return false;
   	}
 
 
@@ -178,10 +195,10 @@ public class GeoPoint {
      * @return a hash code value for this GeoPoint.
    	 **/
   	public int hashCode() {
-    	// This implementation will work, but you may want to modify it
-    	// for improved performance.
-
-    	return 1;
+		int x = longitude;
+		int y = latitude;
+		
+    	return ( ((1+x+y)/2)*(x+y) + y);
   	}
 
 
@@ -190,7 +207,7 @@ public class GeoPoint {
      * @return a string representation of this GeoPoint.
      **/
   	public String toString() {
-  		// TODO Implement this method
+  		return "("+latitude+", "+longitude+")";
   	}
 
 }
