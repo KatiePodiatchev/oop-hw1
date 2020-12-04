@@ -1,6 +1,7 @@
 package homework1;
 
 import java.text.DecimalFormat;
+import java.util.Iterator;
 
 /**
  * The DrivingDirections class creates a textual description of directions
@@ -58,7 +59,26 @@ public class DrivingRouteFormatter extends RouteFormatter {
   		// and at:
   		// http://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html
 		   		
-  		// TODO Implement this method
+		double directions=origHeading;
+		Iterator<GeoSegment> it = geoFeature.getGeoSegments();
+		String heading="";
+		String format="";
+
+		while(it.hasNext()){
+
+			GeoSegment gs= it.next();
+			heading = getTurnString(directions,gs.getHeading());
+			directions=gs.getHeading();
+			
+			double length = gs.getLength();
+			DecimalFormat decimal = new DecimalFormat("#.#");
+			length=Double.valueOf(decimal.format(length));
+			String street = gs.getName();
+			
+			format += heading + " onto " + street + " and go " +length+ " kilometers."+"\n";
+		}
+		
+		return format;
   	}
 
 }

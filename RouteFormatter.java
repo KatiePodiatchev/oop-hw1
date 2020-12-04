@@ -1,5 +1,6 @@
 package homework1;
 
+import java.util.Iterator;
 
 /**
  * A RouteFormatter class knows how to create a textual description of
@@ -24,7 +25,16 @@ public abstract class RouteFormatter {
 		// feature in this route and concatenate the results into a single
 		// String.
   		
-  		// TODO Implement this method
+        Iterator<GeoFeature> it = route.getGeoFeatures();
+        double liveDirection = heading;
+        String direction="";
+        
+        while (it.hasNext()) {
+            GeoFeature gf = it.next();
+            direction += computeLine(gf, liveDirection);
+            liveDirection=gf.getStartHeading();
+        }
+        return direction;
   	}
 
 
@@ -61,7 +71,28 @@ public abstract class RouteFormatter {
      * and likewise for left turns.
      */
   	protected String getTurnString(double origHeading, double newHeading) {
-  		// TODO Implement this method
+  	    String direction="";
+  	    ans = ""
+  	    if(newHeading<=180)
+  	        direction="right";
+  	    else
+  	        direction="left";
+
+  		double zavit = Math.min((origHeading-newHeading)<0?origHeading-newHeading
+                +360:origHeading-newHeading, (newHeading-origHeading)<0?newHeading-origHeading
+                +360:newHeading-origHeading);
+                //(newHeading -origHeading)%360;
+            if(zavit<10)
+                ans = "Continue";
+            else if(zavit<60)
+                ans = "Turn slight "+direction;
+            else if(zavit<120)
+                ans = "Turn " +direction;
+            else if(zavit<179)
+                ans = "Turn sharp "+direction;
+            else
+                ans = "U-turn";
+            return ans
   	}
 
 }
