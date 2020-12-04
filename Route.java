@@ -291,7 +291,7 @@ public class Route {
   	
   	private boolean checkRep() {
   		if (geoSegmentList == null || geoSegmentList.size() < 1 || geoSegmentList.contains(null) ||
-  			geoFeatureList == null || geoFeatureList.size() < 1 || geoSegmentList.contains(null)) {
+  			geoFeatureList == null || geoFeatureList.size() < 1 || geoFeatureList.contains(null)) {
   			return false;
   		}
   		return this.checkSegmentListIsConcatinationOfFeatureList() && 
