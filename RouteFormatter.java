@@ -72,7 +72,7 @@ public abstract class RouteFormatter {
      */
   	protected String getTurnString(double origHeading, double newHeading) {
   	    String direction="";
-  	    ans = ""
+  	    String ans = "";
   	    if(newHeading<=180)
   	        direction="right";
   	    else
@@ -92,7 +92,7 @@ public abstract class RouteFormatter {
                 ans = "Turn sharp "+direction;
             else
                 ans = "U-turn";
-            return ans
+            return ans;
   	}
 
 }
