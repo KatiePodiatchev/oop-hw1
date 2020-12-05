@@ -46,7 +46,6 @@ public class GeoSegment  {
 	private final String name;
 
 	
-  	// TODO Write abstraction function and representation invariant
 	// Abstraction function: p1 represents the first endpoint of the segment, p2 represents the second endpoint of the segment. 
 	// name represents the name of the segment. If p1 == p2 the length of the segment is 0 and the heading is 0.
 	// Representation invariant: name != null && p1 != null && p2 != null.
@@ -72,7 +71,6 @@ public class GeoSegment  {
      *         && gs.p1 = this.p2 && gs.p2 = this.p1
      **/
   	public GeoSegment reverse() {
-  		// TODO Implement this method
   		assert(this.checkRep());
   		GeoSegment reversed = new GeoSegment(this.name, this.p2, this.p1);
   		assert(this.checkRep());
@@ -146,11 +144,12 @@ public class GeoSegment  {
    	 **/
   	public boolean equals(Object o) {
   		assert(this.checkRep());
-		if (!(obj instanceof GeoSegment))
+		if (!(o instanceof GeoSegment))
 			return false;
 		GeoSegment otherGeoSegment = (GeoSegment)o;
 		boolean isEqual = otherGeoSegment.name.equals(this.name) && 
-				otherGeoFeature.p1.equals(this.p1) && otherGeoFeature.p2.equals(this.p2);
+				otherGeoSegment.p1.equals(this.p1) && 
+				otherGeoSegment.p2.equals(this.p2);
 		assert(this.checkRep());
 		return isEqual;
   	}
@@ -162,9 +161,9 @@ public class GeoSegment  {
      **/
   	public int hashCode() {
   		assert(this.checkRep());
-    	int hashCode = p1.hashCode ^ p2.hashCode();
+    	int hashCode = p1.hashCode() ^ p2.hashCode();
     	assert(this.checkRep());
-    	return hasgCode;
+    	return hashCode;
   	}
 
 
@@ -173,7 +172,6 @@ public class GeoSegment  {
      * @return a string representation of this.
      **/
   	public String toString() {
-  		// TODO Implement this method
   		assert(this.checkRep());
   		return String.format("%s: %s --> %s", name, p1.toString(), p2.toString());
   	}

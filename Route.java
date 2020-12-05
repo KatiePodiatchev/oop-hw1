@@ -1,5 +1,6 @@
 package homework1;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -33,9 +34,15 @@ import java.util.Iterator;
  **/
 public class Route {
 
+	private final ArrayList<GeoFeature> geoFeatureList;
 	
- 	// TODO Write abstraction function and representation invariant
+	// Abstraction Function:
+	// The sequence of geographic features that make up this Route are represented by the 
+	// geoFeatureList.
 
+	// Representation invariant: for every two consecutive GeoFeatures gf_1 and gf_2
+	// in geoFeatureList gf_1 != null && gf_2 != null && gf_1.name != gf_2.name. 
+	
 
   	/**
   	 * Constructs a new Route.
@@ -46,8 +53,30 @@ public class Route {
      *          r.start = gs.p1 &&
      *          r.end = gs.p2
      **/
-  	public Route(GeoSegment gs) {
-  		// TODO Implement this constructor
+  	public Route(GeoSegment gs) {  		
+  		GeoFeature feature = new GeoFeature(gs);
+  		this.geoFeatureList = new ArrayList<>();
+  		this.geoFeatureList.add(feature);
+
+  		assert(this.checkRep());
+  	}
+  	
+  	
+  	/**
+  	 * Constructs a new Route.
+     * @requires featureList != null && for every two consecutive GeoFeatures gf_1 and gf_2
+				 in geoFeatureList gf_1 != null && gf_2 != null && gf_1.name != gf_2.name && 
+				 gf_1.end == gf_2.start. 
+     * @effects Constructs a new Route, r, such that
+     *	        r.startHeading = featureList.end.heading &&
+     *          r.endHeading = featureList.start.heading &&
+     *          r.start = featureList.start &&
+     *          r.end = featureList.end &&
+     *          r.length = sum of lengths of features in featureList; 
+     **/
+  	public Route(ArrayList<GeoFeature> featureList) {
+  		this.geoFeatureList = (ArrayList<GeoFeature>)featureList.clone();
+  		assert(this.checkRep());
   	}
 
 
@@ -56,7 +85,10 @@ public class Route {
      * @return location of the start of the route.
      **/
   	public GeoPoint getStart() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		GeoPoint startPoint = this.geoFeatureList.get(0).getStart();
+  		assert(this.checkRep());
+  		return startPoint;
   	}
 
 
@@ -65,7 +97,10 @@ public class Route {
      * @return location of the end of the route.
      **/
   	public GeoPoint getEnd() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		GeoPoint endPoint = this.geoFeatureList.get(0).getEnd();
+  		assert(this.checkRep());
+  		return endPoint;
   	}
 
 
@@ -75,7 +110,10 @@ public class Route {
    	 *         route, in degrees.
    	 **/
   	public double getStartHeading() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		double startHeading = this.geoFeatureList.get(0).getStartHeading();
+  		assert(this.checkRep());
+  		return startHeading;
   	}
 
 
@@ -85,7 +123,10 @@ public class Route {
      *         route, in degrees.
      **/
   	public double getEndHeading() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		double endHeading = geoFeatureList.get(geoFeatureList.size() -1).getEndHeading();
+  		assert(this.checkRep());
+  		return endHeading;
   	}
 
 
@@ -96,7 +137,13 @@ public class Route {
      *         traverse the route. These values are not necessarily equal.
    	 **/
   	public double getLength() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		double length = 0;
+  		for (GeoFeature feature: geoFeatureList) {
+  			length += feature.getLength();
+  		}
+  		assert(this.checkRep());
+  		return length;
   	}
 
 
@@ -110,7 +157,24 @@ public class Route {
      *         r.length = this.length + gs.length
      **/
   	public Route addSegment(GeoSegment gs) {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		ArrayList<GeoFeature> newFeatureList = (ArrayList<GeoFeature>)this.geoFeatureList.clone();
+  		
+  		GeoFeature newFeature;
+  		GeoFeature lastFeature = newFeatureList.get(newFeatureList.size()-1);
+  		String lastFeatureName = lastFeature.getName();
+  		if (gs.getName().equals(lastFeatureName)) {
+  			newFeatureList.remove(lastFeature);
+  			newFeature = lastFeature.addSegment(gs);
+  		} else {
+  			newFeature = new GeoFeature(gs);
+  		}
+  		newFeatureList.add(newFeature);
+  		
+		Route newRoute = new Route(newFeatureList);
+		assert(this.checkRep());
+		return newRoute;
+  		
   	}
 
 
@@ -133,7 +197,10 @@ public class Route {
      * @see homework1.GeoFeature
      **/
   	public Iterator<GeoFeature> getGeoFeatures() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		Iterator<GeoFeature> iterator = this.geoFeatureList.iterator();
+  		assert(this.checkRep());
+  		return iterator;
   	}
 
 
@@ -152,7 +219,10 @@ public class Route {
      * @see homework1.GeoSegment
      **/
   	public Iterator<GeoSegment> getGeoSegments() {
-  		// TODO Implement this method
+  		assert(this.checkRep());
+  		ArrayList<GeoSegment> segments = this.flattenFeatureList(this.geoFeatureList);
+  		assert(this.checkRep());
+  		return segments.iterator();
   	}
 
 
@@ -162,8 +232,14 @@ public class Route {
      *         (o.geoFeatures and this.geoFeatures contain
      *          the same elements in the same order).
      **/
-  	public boolean equals(Object o) {
-  		// TODO Implement this method
+  	public boolean equals(Object obj) {
+  		assert(this.checkRep());
+		if (!(obj instanceof Route))
+			return false;
+		Route otherRoute = (Route)obj;
+		boolean isEqual = otherRoute.geoFeatureList.equals(this.geoFeatureList);
+		assert(this.checkRep());
+		return isEqual;
   	}
 
 
@@ -172,9 +248,7 @@ public class Route {
      * @return a hash code for this.
      **/
   	public int hashCode() {
-    	// This implementation will work, but you may want to modify it
-    	// for improved performance.
-
+  		assert(this.checkRep());
     	return 1;
   	}
 
@@ -184,6 +258,65 @@ public class Route {
      * @return a string representation of this.
      **/
   	public String toString() {
+  		assert(this.checkRep());
+  		String representationString = "";
+  		for (GeoFeature feature: geoFeatureList) {
+  			representationString += feature.toString();
+  			representationString += "\n";
+  		}
+  		assert(this.checkRep());
+  		return representationString;
   	}
 
+  	
+  	private ArrayList<GeoSegment> flattenFeatureList(ArrayList<GeoFeature> featureList) {
+  		ArrayList<GeoSegment> segmentList = new ArrayList<>();
+  		for (GeoFeature feature:this.geoFeatureList) {
+  			Iterator<GeoSegment> featureIterator = feature.getGeoSegments();
+  			while(featureIterator.hasNext()) {
+  				segmentList.add(featureIterator.next());
+  			}
+  		}
+  		return segmentList;
+  	}
+ 
+  	
+  	private boolean checkRep() {
+  		if (geoFeatureList == null || geoFeatureList.size() < 1 || geoFeatureList.contains(null)) {
+  			return false;
+  		}
+  		return this.checkNoConsecutiveFeaturesWithSameName() &&
+  			   this.checkNewFeatureBeginsWithEndOfOld();
+  	}
+
+  	
+  	private boolean checkNoConsecutiveFeaturesWithSameName() {
+  		GeoFeature previousFeature = null;
+  		for (GeoFeature currentFeature:geoFeatureList) {
+  			if (previousFeature != null) {
+  				if (currentFeature.getName().equals(previousFeature.getName())) {
+  					return false;
+  				}
+  			}
+  			previousFeature = currentFeature;
+  		}
+  		return true;
+  	}
+  	
+  	
+  	private boolean checkNewFeatureBeginsWithEndOfOld() {
+  		GeoFeature previousFeature = null;
+  		for (GeoFeature currentFeature:geoFeatureList) {
+  			if (previousFeature != null) {
+  				GeoPoint lastPointAtPrevious = previousFeature.getEnd();
+  				GeoPoint firstPointAtCurrent = currentFeature.getStart();
+  				if (!lastPointAtPrevious.equals(firstPointAtCurrent)) {
+  					return false;
+  				}
+  			}
+  			previousFeature = currentFeature;
+  		}
+  		return true;
+  	}
+ 
 }

@@ -1,5 +1,6 @@
 package homework1;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -72,8 +73,23 @@ public class GeoFeature {
   		geoSegmentList.add(gs);
   		assert(this.checkRep());
   	}
-  
-
+  	
+	/**
+     * Constructs a new GeoFeature.
+     * @requires gsList != null && gsLis.size() > 0 && all GeoSegment in gsList have the same name
+     * @effects Constructs a new GeoFeature, r, such that 
+     *	        r.name = the name of all the segments in gsList &&
+     *          r.startHeading = gsLis[0].heading &&
+     *          r.endHeading = gsList[gsList.size - 1].heading &&
+     *          r.start = gsList[0].p1 &&
+     *          r.end = gsList[gsList.size - 1].p2 &&
+     *          r.length = the sum of lengths of the segments in gsList 
+     **/
+  	public GeoFeature(ArrayList<GeoSegment> gsList) {
+  		geoSegmentList = (ArrayList<GeoSegment>)gsList.clone();
+  		assert(this.checkRep());
+  	}
+  	
  	/**
  	  * Returns name of geographic feature.
       * @return name of geographic feature
@@ -92,7 +108,7 @@ public class GeoFeature {
      */
   	public GeoPoint getStart() {
   		assert(this.checkRep());
-  		start = geoSegmentList.get(0);
+  		GeoPoint start = geoSegmentList.get(0).getP1();
   		assert(this.checkRep());
   		return start;
   	}
@@ -104,7 +120,7 @@ public class GeoFeature {
      */
   	public GeoPoint getEnd() {
   		assert(this.checkRep());
-  		GeoPoint end = geoSegmentList.get(geoSegmentList.size() - 1);
+  		GeoPoint end = geoSegmentList.get(geoSegmentList.size() - 1).getP2();
   		assert(this.checkRep());
   		return end;
   	}
@@ -147,7 +163,7 @@ public class GeoFeature {
   		assert(this.checkRep());
   		
   		double length = 0;
-  		for (segment Geosegment: geoSegmentList) {
+  		for (GeoSegment segment: geoSegmentList) {
   			length += segment.getLength();
   		}
   		
@@ -167,8 +183,11 @@ public class GeoFeature {
      **/
   	public GeoFeature addSegment(GeoSegment gs) {
   		assert(this.checkRep());
-  		geoSegmentList.add(gs);
+  		ArrayList<GeoSegment> newGeoSegmentList = (ArrayList<GeoSegment>)this.geoSegmentList.clone();
+  	    newGeoSegmentList.add(gs);
+  		GeoFeature newGeoFeature = new GeoFeature(newGeoSegmentList);
   		assert(this.checkRep());
+  		return newGeoFeature;
   	}
 
 
@@ -204,11 +223,11 @@ public class GeoFeature {
      *         (o.geoSegments and this.geoSegments contain
      *          the same elements in the same order).
      **/
-  	public boolean equals(Object o) {
+  	public boolean equals(Object obj) {
   		assert(this.checkRep());
 		if (!(obj instanceof GeoFeature))
 			return false;
-		GeoFeature otherGeoFeature = (GeoFeature)o;
+		GeoFeature otherGeoFeature = (GeoFeature)obj;
 		boolean isEqual = otherGeoFeature.getName().equals(this.getName()) && 
 				otherGeoFeature.geoSegmentList.equals(this.geoSegmentList);
 		assert(this.checkRep());
@@ -231,8 +250,8 @@ public class GeoFeature {
      **/
   	public String toString() {
   		assert(this.checkRep());
-  		String representationString = this.getName() + ": " + this.getStart().getP1().toString() + " ";
-  		for (segment Geosegment: geoSegmentList) {
+  		String representationString = this.getName() + ": " + this.getStart().toString() + " ";
+  		for (GeoSegment segment:geoSegmentList) {
   			representationString += String.format("==> %s", segment.getP2().toString());
   		}
   		assert(this.checkRep());
@@ -245,15 +264,15 @@ public class GeoFeature {
   			return false;
   		}
   		GeoSegment previousSegment = null;
-  		for (currentSegment Geosegment: geoSegmentList) {
-  			if (lastSegment != null) {
+  		for (GeoSegment currentSegment:geoSegmentList) {
+  			if (previousSegment != null) {
   				boolean isTheSameString = previousSegment.getName().equals(currentSegment.getName());
-  				boolean isTheSamePoint = previousSegment.getP2().equals(lastSegment.getP1());
+  				boolean isTheSamePoint = previousSegment.getP2().equals(currentSegment.getP1());
   	  			if (!isTheSameString && !isTheSamePoint) {
   	  				return false;
   	  			}
   			}
-  			lastElement = currentElement;
+  			previousSegment = currentSegment;
   		}
   		return true;
   	}
