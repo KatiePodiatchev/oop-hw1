@@ -121,7 +121,7 @@ public class GeoPoint {
 
   	/**
      * Returns the longitude of this.
-     * @return the latitude of this in millionths of degrees.
+     * @return the longitude of this in millionths of degrees.
      */
   	public int getLongitude() {
   		checkRep();
