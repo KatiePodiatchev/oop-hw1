@@ -272,9 +272,15 @@ public class Route {
   	}
 
   	
-  	private ArrayList<GeoSegment> flattenFeatureList(ArrayList<GeoFeature> featureList) {
+  	/**
+     * @effects returns a list of segments gsList such that gsList is
+     * 			a concatenation of the segments in each feature in featureList. 
+   	 * @requires featureList != null && featureList.size > 0
+   	 * 			 && featureList does not contain null. 
+     **/
+  	private static ArrayList<GeoSegment> flattenFeatureList(ArrayList<GeoFeature> featureList) {
   		ArrayList<GeoSegment> segmentList = new ArrayList<>();
-  		for (GeoFeature feature:this.geoFeatureList) {
+  		for (GeoFeature feature:featureList) {
   			Iterator<GeoSegment> featureIterator = feature.getGeoSegments();
   			while(featureIterator.hasNext()) {
   				segmentList.add(featureIterator.next());
@@ -284,8 +290,11 @@ public class Route {
   	}
  
   	
+  	/**
+     * @effects returns true iff the representation invariant holds.
+     **/
   	private boolean checkRep() {
-  		if (geoFeatureList == null || geoFeatureList.size() > 0 || geoFeatureList.contains(null)) {
+  		if (geoFeatureList == null || geoFeatureList.size() < 1 || geoFeatureList.contains(null)) {
   			return false;
   		}
   		return this.checkNoConsecutiveFeaturesWithSameName() &&
@@ -293,6 +302,12 @@ public class Route {
   	}
 
   	
+  	/**
+     * @effects returns true iff no consecutive features in this.geoFeatureList 
+     *          have the same name.
+   	 * @requires this.geoFeatureList != null && this.geoFeatureList.size > 0
+   	 * 			 && this.geoFeatureList does not contain null. 
+     **/
   	private boolean checkNoConsecutiveFeaturesWithSameName() {
   		GeoFeature previousFeature = null;
   		for (GeoFeature currentFeature:geoFeatureList) {
@@ -305,8 +320,14 @@ public class Route {
   		}
   		return true;
   	}
+
   	
-  	
+  	/**
+     * @effects returns true iff each feature in this.geoFeatureList 
+     *          begins with the end of the previous feature.
+   	 * @requires this.geoFeatureList != null && this.geoFeatureList.size > 0
+   	 * 			 && this.geoFeatureList does not contain null. 
+     **/
   	private boolean checkNewFeatureBeginsWithEndOfOld() {
   		GeoFeature previousFeature = null;
   		for (GeoFeature currentFeature:geoFeatureList) {

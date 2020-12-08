@@ -177,7 +177,9 @@ public class GeoSegment  {
   		return String.format("%s: %s --> %s", name, p1.toString(), p2.toString());
   	}
   	
-
+  	/**
+     * @effects returns true iff the representation invariant holds.
+     **/
   	private boolean checkRep() {
   		return name != null && p1 != null && p2 != null;
   	}

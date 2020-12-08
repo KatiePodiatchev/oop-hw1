@@ -48,8 +48,6 @@ public class GeoFeature {
 	
 	 private final ArrayList<GeoSegment> geoSegmentList; 
 
-	
-  	// TODO Write abstraction function and representation invariant
 	// Abstraction function: geoSegmentList is a list of GeoSegments 
 	// 
 	// Representation invariant: GeoSegments is a non empty list of GeoSegments. If gs2 comes right after gs1 in geoSegmentList,
@@ -261,6 +259,9 @@ public class GeoFeature {
   	}
   
   
+  	/**
+     * @effects returns true iff the representation invariant holds.
+     **/
   	private boolean checkRep() {
   		if (geoSegmentList == null || geoSegmentList.size() < 1 || geoSegmentList.contains(null)) {
   			return false;
