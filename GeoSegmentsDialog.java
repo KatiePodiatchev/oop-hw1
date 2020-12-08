@@ -1,16 +1,14 @@
 package homework1;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -35,8 +33,8 @@ public class GeoSegmentsDialog extends JDialog {
 	// a control contained in this 
 	private JList<GeoSegment> lstSegments;
 	
-	// the endpoint of the most resently selcted segment. 
-	private GeoPoint endOfLastSelectedSegment;
+	// the endpoint of the most recently added segment. 
+	private GeoPoint endOfLastAddedSegment;
 	
 	/**
 	 * Creates a new GeoSegmentsDialog JDialog.
@@ -51,12 +49,10 @@ public class GeoSegmentsDialog extends JDialog {
 		
 		this.parent = pnlParent;
 		
-		// create components
+		// create components.
 		lstSegments = new JList<>(ExampleGeoSegments.segments);
 		lstSegments.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
 		JScrollPane scrlSegments = new JScrollPane(lstSegments);
-		scrlSegments.setPreferredSize(new Dimension(450, 100));
 
 		JLabel lblSegments = new JLabel("GeoSegments:");
 		lblSegments.setLabelFor(lstSegments);
@@ -72,55 +68,36 @@ public class GeoSegmentsDialog extends JDialog {
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				GeoSegment selectedSegment = lstSegments.getSelectedValue();
-				if (endOfLastSelectedSegment == null || 
-					endOfLastSelectedSegment.equals(selectedSegment.getP1())) {
-					endOfLastSelectedSegment = selectedSegment.getP2();
+				if (endOfLastAddedSegment == null || 
+					endOfLastAddedSegment.equals(selectedSegment.getP1())) {
+					endOfLastAddedSegment = selectedSegment.getP2();
 					parent.addSegment(selectedSegment);
 				}
 			}
 		});
+	    
+		// layout components.
+		scrlSegments.setPreferredSize(new Dimension(450, 150));
+		scrlSegments.setAlignmentX(LEFT_ALIGNMENT);
 		
-		// arrange components on grid	
-	    JPanel panel = new JPanel();
+		// lay out the label and scroll pane from top to bottom.
+		JPanel listPane = new JPanel();
+		listPane.setLayout(new BoxLayout(listPane, BoxLayout.Y_AXIS));
+		listPane.add(lblSegments);
+		listPane.add(scrlSegments);
+		listPane.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 	    
-		GridBagLayout gridbag = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-	    panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
-	    panel.setLayout(gridbag); 
-
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.insets = new Insets(0,0,0,0);
-		gridbag.setConstraints(lblSegments, c);
-		panel.add(lblSegments);
-		
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = 3;
-		c.gridheight = 1;
-		c.insets = new Insets(0,0,0,0);
-		gridbag.setConstraints(scrlSegments, c);
-	    panel.add(scrlSegments);
+		// lay out the buttons.
+	    JPanel buttonPane = new JPanel();
+	    buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.X_AXIS));
+	    buttonPane.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
+	    buttonPane.add(btnAdd);
+	    buttonPane.add(Box.createHorizontalGlue());
+	    buttonPane.add(btnCancle);
 	    
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.insets = new Insets(0,20,0,0);
-		gridbag.setConstraints(btnAdd, c);
-	    panel.add(btnAdd);
-	    
-		c.gridx = 2;
-		c.gridy = 2;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.insets = new Insets(0,20,0,0);
-		gridbag.setConstraints(btnCancle, c);
-	    panel.add(btnCancle);
-	    
-		getContentPane().add(panel);
-	
+	    // put everything together, using the content pane's BorderLayout.
+	    Container contentPane = getContentPane();
+	    contentPane.add(listPane, BorderLayout.CENTER);
+	    contentPane.add(buttonPane, BorderLayout.SOUTH);
 	}
 }

@@ -147,12 +147,12 @@ public class RouteFormatterGUI extends JPanel {
 		if (route == null) {
 			route = new Route(segment);
 		} else {
-			this.route.addSegment(segment);
+			route = route.addSegment(segment);
 		}
 		txtWalkingDirections
-			.setText(new WalkingRouteFormatter().computeDirections(this.route, 0)); 
+			.setText(new WalkingRouteFormatter().computeDirections(route, 0)); 
 		txtDrivingDirections
-			.setText(new DrivingRouteFormatter().computeDirections(this.route, 0)); 
+			.setText(new DrivingRouteFormatter().computeDirections(route, 0)); 
 		model.addElement(segment);
 	}
 
