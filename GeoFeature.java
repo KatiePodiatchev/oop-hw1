@@ -129,7 +129,8 @@ public class GeoFeature {
   	/**
   	 * Returns direction of travel at the start of the geographic feature.
      * @return direction (in standard heading) of travel at the start of the
-     *         geographic feature, in degrees.
+     *         geographic feature, in degrees. 0 in case the length at the
+     *         start of the geographic feature is 0.
      */
   	public double getStartHeading() {
   		assert(this.checkRep());
@@ -142,7 +143,8 @@ public class GeoFeature {
   	/**
   	 * Returns direction of travel at the end of the geographic feature.
      * @return direction (in standard heading) of travel at the end of the
-     *         geographic feature, in degrees.
+     *         geographic feature, in degrees. 0 in case the length at the
+     *         end of the geographic feature is 0.
      */
   	public double getEndHeading() {
   		assert(this.checkRep());

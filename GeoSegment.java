@@ -127,7 +127,8 @@ public class GeoSegment  {
   	 * Returns the compass heading from p1 to p2.
      * @requires this.length != 0
      * @return the compass heading from p1 to p2, in degrees, using the
-     *         flat-surface, near the Technion approximation.
+     *         flat-surface, near the Technion approximation. 
+     *         If this.length == 0, returns 0.
      **/
   	public double getHeading() {
   		assert(this.checkRep());

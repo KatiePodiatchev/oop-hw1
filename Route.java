@@ -40,8 +40,9 @@ public class Route {
 	// The sequence of geographic features that make up this Route are represented by the 
 	// geoFeatureList.
 
-	// Representation invariant: for every two consecutive GeoFeatures gf_1 and gf_2
-	// in geoFeatureList gf_1 != null && gf_2 != null && gf_1.name != gf_2.name. 
+	// Representation invariant: geoFeatureList != null && geoFeatureList.size > 0 &&
+	// for every two consecutive GeoFeatures gf_1 and gf_2 in geoFeatureList gf_1 != null &&
+	// gf_2 != null && gf_1.name != gf_2.name. 
 	
 
   	/**
@@ -107,7 +108,8 @@ public class Route {
   	/**
   	 * Returns direction of travel at the start of the route, in degrees.
    	 * @return direction (in compass heading) of travel at the start of the
-   	 *         route, in degrees.
+   	 *         route, in degrees. 0 in case the length at the start of the 
+   	 *         geographic feature is 0.
    	 **/
   	public double getStartHeading() {
   		assert(this.checkRep());
@@ -120,7 +122,8 @@ public class Route {
   	/**
   	 * Returns direction of travel at the end of the route, in degrees.
      * @return direction (in compass heading) of travel at the end of the
-     *         route, in degrees.
+     *         route, in degrees. 0 in case the length at the end of the 
+     *         rout is 0.
      **/
   	public double getEndHeading() {
   		assert(this.checkRep());
@@ -282,7 +285,7 @@ public class Route {
  
   	
   	private boolean checkRep() {
-  		if (geoFeatureList == null || geoFeatureList.size() < 1 || geoFeatureList.contains(null)) {
+  		if (geoFeatureList == null || geoFeatureList.size() > 0 || geoFeatureList.contains(null)) {
   			return false;
   		}
   		return this.checkNoConsecutiveFeaturesWithSameName() &&
