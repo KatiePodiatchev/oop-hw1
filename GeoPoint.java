@@ -81,6 +81,16 @@ public class GeoPoint {
     // (gp.longitude <= MAX_LONGITUDE) && (gp.longitude >= MIN_LONGITUDE) and
     // (gp.latitude <= MAX__LATITUDE) && (gp.latitude >= MIN_LATITUDE)
 
+	/**
+	 * checks if rep.invariant is being violated.
+	 * @throws AssertionError if representation invariant is violated.
+	 */
+  	private void checkRep(){
+		assert((this.longitude <= MAX_LONGITUDE) && (this.longitude >= MIN_LONGITUDE)):
+				"longitude is not within legal limits!";
+		assert((this.latitude <= MAX_LATITUDE) && (this.latitude >= MIN_LATITUDE)):
+				"latitude is not within legal limits!";
+  	}
   	
   	/**
   	 * Constructs GeoPoint from a latitude and longitude.
@@ -103,7 +113,9 @@ public class GeoPoint {
      * @return the latitude of this in millionths of degrees.
      */
   	public int getLatitude() {
+  		checkRep();
   		return latitude;
+  		checkRep();
   	}
 
 
@@ -112,6 +124,7 @@ public class GeoPoint {
      * @return the latitude of this in millionths of degrees.
      */
   	public int getLongitude() {
+  		checkRep();
   		return longitude;
   	}
 
@@ -123,7 +136,8 @@ public class GeoPoint {
      *         the Technion approximation.
      **/
   	public double distanceTo(GeoPoint gp) {
-        //longitude and Latitude
+  		checkRep();
+  		//longitude and Latitude
         int fistLongitude = longitude;
         int firstLatitude = latitude;
         int secondLongitude = gp.getLongitude();
@@ -135,7 +149,7 @@ public class GeoPoint {
 
         //Final distance calculation (divided by million).
         double DistanceToPoint =Math.sqrt(Math.pow(x,2)+Math.pow(y,2))/MILLION;
-
+        checkRep();
         return DistanceToPoint;
   	}
 
@@ -158,7 +172,7 @@ public class GeoPoint {
 		 // degrees and degrees increase in the clockwise direction. By
 		 // mathematical convention, "east" is 0 degrees, and degrees
 		 // increase in the counterclockwise direction. 
-		
+  		checkRep();
         int firstLatitude = latitude;
         int fistLongitude = longitude;
 
@@ -169,7 +183,7 @@ public class GeoPoint {
 		int LatitudeDiff = firstLatitude - secondLatitude;
 
         double direction = Math.abs((-Math.toDegrees(Math.atan2(LatitudeDiff,LongitudeDiff)) + 270) % 360);
-
+        checkRep();
         return direction;
   	}
 
@@ -180,6 +194,7 @@ public class GeoPoint {
      * 		   gp.latitude = this.latitude && gp.longitude = this.longitude
      **/
   	public boolean equals(Object gp) {
+  		checkRep();
 		if(gp !=null && gp instanceof GeoPoint) {
 			GeoPoint recievedGP = (GeoPoint) gp;
 			if (recievedGP.getLatitude() == this.latitude &&
@@ -195,6 +210,7 @@ public class GeoPoint {
      * @return a hash code value for this GeoPoint.
    	 **/
   	public int hashCode() {
+  		checkRep();
 		int x = longitude;
 		int y = latitude;
 		
@@ -207,6 +223,7 @@ public class GeoPoint {
      * @return a string representation of this GeoPoint.
      **/
   	public String toString() {
+  		checkRep();
   		return "("+latitude+", "+longitude+")";
   	}
 
