@@ -61,7 +61,10 @@ public class GeoPoint {
   	/** a value for division. **/
   	public static final int MILLION = 1000000;
   	
+  	// the latitude of the geo point messured in millionths of a degree.
   	private int latitude;
+  	
+  	// the longitude of the geo point messured in millionths of a degree.
     private int longitude;
     
 	// Implementation hint:
@@ -75,7 +78,8 @@ public class GeoPoint {
 	// using ints for your internal representation of GeoPoint. 
 
 	// Abstraction Function:
-	// Represent a GeoPoint gp with gp.latitude = latitude and gp.longitude = longitude.
+	// Represent a GeoPoint gp with gp.latitude = latitude and gp.longitude = longitude
+    // messured in millionths of a degree.
 
 	// Representation invariant for every GeoPoint gp:
     // (gp.longitude <= MAX_LONGITUDE) && (gp.longitude >= MIN_LONGITUDE) and
@@ -91,6 +95,7 @@ public class GeoPoint {
 		assert((this.latitude <= MAX_LATITUDE) && (this.latitude >= MIN_LATITUDE)):
 				"latitude is not within legal limits!";
   	}
+  	
   	
   	/**
   	 * Constructs GeoPoint from a latitude and longitude.
@@ -115,7 +120,6 @@ public class GeoPoint {
   	public int getLatitude() {
   		checkRep();
   		return latitude;
-  		checkRep();
   	}
 
 
@@ -198,9 +202,12 @@ public class GeoPoint {
 		if(gp !=null && gp instanceof GeoPoint) {
 			GeoPoint recievedGP = (GeoPoint) gp;
 			if (recievedGP.getLatitude() == this.latitude &&
-					recievedGP.getLongitude() == this.longitude)
+					recievedGP.getLongitude() == this.longitude) {
+				checkRep();
 				return true;
+			}
 		}
+		checkRep();
 		return false;
   	}
 
@@ -213,8 +220,9 @@ public class GeoPoint {
   		checkRep();
 		int x = longitude;
 		int y = latitude;
-		
-    	return ( ((1+x+y)/2)*(x+y) + y);
+		int code = (((1+x+y)/2)*(x+y) + y);
+		checkRep();
+    	return code;
   	}
 
 
