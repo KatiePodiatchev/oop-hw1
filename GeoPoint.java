@@ -218,9 +218,7 @@ public class GeoPoint {
    	 **/
   	public int hashCode() {
   		checkRep();
-		int x = longitude;
-		int y = latitude;
-		int code = (((1+x+y)/2)*(x+y) + y);
+		int code = longitude + latitude;
 		checkRep();
     	return code;
   	}
