@@ -264,7 +264,7 @@ public class Route {
   		assert(this.checkRep());
   		String representationString = "";
   		for (GeoFeature feature: geoFeatureList) {
-  			representationString += feature.toString();
+  			representationString += feature;
   			representationString += "\n";
   		}
   		assert(this.checkRep());

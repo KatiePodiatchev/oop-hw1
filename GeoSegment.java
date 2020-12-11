@@ -174,8 +174,9 @@ public class GeoSegment  {
      **/
   	public String toString() {
   		assert(this.checkRep());
-  		return String.format("%s: %s --> %s", name, p1.toString(), p2.toString());
+  		return String.format("%s: %s --> %s", name, p1, p2);
   	}
+  	
   	
   	/**
      * @effects returns true iff the representation invariant holds.

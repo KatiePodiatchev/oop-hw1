@@ -250,9 +250,9 @@ public class GeoFeature {
      **/
   	public String toString() {
   		assert(this.checkRep());
-  		String representationString = this.getName() + ": " + this.getStart().toString() + " ";
+  		String representationString = this.getName() + ": " + this.getStart() + " ";
   		for (GeoSegment segment:geoSegmentList) {
-  			representationString += String.format("==> %s", segment.getP2().toString());
+  			representationString += String.format("==> %s", segment.getP2());
   		}
   		assert(this.checkRep());
   		return representationString;
