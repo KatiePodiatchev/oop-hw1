@@ -46,8 +46,9 @@ public class GeoSegment  {
 	private final String name;
 
 	
-	// Abstraction function: p1 represents the first endpoint of the segment, p2 represents the second endpoint of the segment. 
-	// name represents the name of the segment. If p1 == p2 the length of the segment is 0 and the heading is 0.
+	// Abstraction function: p1 represents the first endpoint of the segment, 
+	// p2 represents the second endpoint of the segment. name represents the name of the segment. 
+	// If p1 == p2 then the length of the segment is 0 and the heading is 0.
 	// Representation invariant: name != null && p1 != null && p2 != null.
 	
 	

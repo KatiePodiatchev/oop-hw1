@@ -48,11 +48,12 @@ public class GeoFeature {
 	
 	 private final ArrayList<GeoSegment> geoSegmentList; 
 
-	// Abstraction function: geoSegmentList is a list of GeoSegments 
+	// Abstraction function: geoSegmentList is an ordered list of GeoSegments that
+	// represents the geoSegment sequence that makes up this geographic feature.
 	// 
-	// Representation invariant: GeoSegments is a non empty list of GeoSegments. If gs2 comes right after gs1 in geoSegmentList,
-	// then the first endpoint of gs2 is equal to the second endpoint of gs1. 
-	// All GeoSegments in the list must have equal names.
+	// Representation invariant: GeoSegments != null && GeoSegments.size > 0 &&
+	// for every two consecutive GeoSegments gs_1 and gs_2 in geoSegmentList gs_1 != null &&
+	// gs_2 != null && gf_1.end == gf_2.start && gs_1.name == gf_2.name.
 
 	
 	/**

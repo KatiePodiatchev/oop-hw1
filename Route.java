@@ -42,7 +42,7 @@ public class Route {
 
 	// Representation invariant: geoFeatureList != null && geoFeatureList.size > 0 &&
 	// for every two consecutive GeoFeatures gf_1 and gf_2 in geoFeatureList gf_1 != null &&
-	// gf_2 != null && gf_1.name != gf_2.name. 
+	// gf_2 != null && gf_1.name != gf_2.name && gf_1.end == gf_2.start. 
 	
 
   	/**
